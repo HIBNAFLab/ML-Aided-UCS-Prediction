@@ -12,6 +12,7 @@ ASSETS = ROOT / 'ModelsGUI'
 FEATURES = ['Category', 'VP (m/s)', 'PLS (MPa)', 'SH', 'SH type']
 ROCKS = {'Igneous': 1, 'Sedimentary': 2, 'Metamorphic': 3}
 SH_TYPES = {'L': 1, 'N': 2}
+# SH_TYPES = {'L': 1, 'N': 2}
 LIMITS = {'VP (m/s)': (375., 7978.), 'PLS (MPa)': (.36, 23.1), 'SH': (10., 72.)}
 DISCLAIMER = 'Model applicability is limited to the multivariate training domain, even when individual inputs fall within their respective ranges.'
 st.set_page_config(page_title='UCS | Hybrid Intelligence', page_icon='🪨', layout='wide')
@@ -97,7 +98,7 @@ def shap_chart(model, poly, scaler, row, refs, n_reference):
 st.title('🪨 ML-Aided Uniaxial Compressive Strength (UCS) Prediction')
 st.caption('XGBoost regression · Rock-type-specific SHAP analysis · Research demonstration')
 st.warning('**Model applicability disclaimer:** ' + DISCLAIMER)
-st.info('Inputs are reordered to match the saved training pipeline: Category → VP → PLS → SH → SH type. Individual-range checks do not establish multivariate applicability.')
+st.info('**Individual range checks do not establish multivariate applicability.**')
 
 try:
     model, poly, scaler = artifacts()
@@ -118,8 +119,8 @@ if st.session_state.pop('_reset_ucs_inputs', False):
 
 with st.form('ucs_form'):
     st.subheader('Rock properties')
-    st.caption('The ranges below are taken from the training reference dataset (n = 1,036). '
-               'Values within these ranges are not necessarily within the multivariate training domain.')
+    # st.caption('The ranges below are taken from the training reference dataset (n = 1,036). '
+    #            'Values within these ranges are not necessarily within the multivariate training domain.')
     c1, c2 = st.columns(2)
     with c1:
         rock = st.selectbox('Rock category', list(ROCKS), key='rock')
@@ -137,13 +138,13 @@ with st.form('ucs_form'):
                              help='Training range: 10–72')
         st.caption('Training range: 10–72')
         shtype = st.selectbox('SH type', list(SH_TYPES), index=1, key='shtype')
-        st.caption('SH type: L = 1; N = 2')
+        st.caption('SH type: L; N')
         explain = st.checkbox('Generate SHAP violin and local explanation', value=True, key='explain')
         nref = st.slider('Maximum training reference observations for SHAP',
                          25, 1000, 250, step=25, key='nref')
     predict_col, clear_col = st.columns(2)
     with predict_col:
-        submitted = st.form_submit_button('Predict UCS', type='primary', use_container_width=True)
+        submitted = st.form_submit_button('Predict UCS & Generate ', type='primary', use_container_width=True)
     with clear_col:
         cleared = st.form_submit_button('Clear Inputs', use_container_width=True)
 
@@ -163,14 +164,14 @@ if submitted:
 
 if 'last_result' in st.session_state:
     result, row, selected_rock, explain, nref = st.session_state['last_result']
-    st.subheader('Training-domain context')
+    st.subheader('Training domain context')
     try:
         ref = reference()
         subset = ref.loc[ref['Category'] == ROCKS[selected_rock]].copy()
         st.write(f'Available training reference observations for **{selected_rock}**: **{len(subset):,}**.')
         if len(subset):
             d = local_domain_distance(row, subset)
-            st.caption(f'Nearest reference observation distance (range-normalized VP, PLS and SH): {d:.3f}. This is descriptive only, not a validated applicability threshold.')
+            st.caption(f'Nearest reference observation distance (range normalized VP, PLS and SH): {d:.3f}. This is descriptive only, not a validated applicability threshold.')
         if explain and len(subset) >= 2:
             with st.spinner('Computing category-specific SHAP values…'):
                 fig = shap_chart(model, poly, scaler, row, subset, nref)
@@ -191,4 +192,5 @@ if 'last_result' in st.session_state:
     st.warning(DISCLAIMER)
 
 st.divider()
-st.caption('© 2026 IA Tijani, IA Lawal & collaborators. All rights reserved. | Research-use prediction tool. Verify suitability independently before engineering application.')
+st.caption('Paper under preparation.')
+st.caption('© 2026 IA Tijani, IA Lawal & collaborators. All rights reserved. Research use prediction tool.')
