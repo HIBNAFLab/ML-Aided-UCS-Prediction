@@ -96,7 +96,7 @@ def shap_chart(model, poly, scaler, row, refs, n_reference):
     return fig
 
 st.title('🪨 ML-Aided Uniaxial Compressive Strength (UCS) Prediction')
-st.caption('XGBoost regression · Rock-type-specific SHAP analysis · Research demonstration')
+st.caption('Rock type specific and SHAP analysis · Research demonstration')
 st.warning('**Model applicability disclaimer:** ' + DISCLAIMER)
 st.info('**Individual range checks do not establish multivariate applicability.**')
 
