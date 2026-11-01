@@ -157,4 +157,4 @@ if 'last_result' in st.session_state:
     st.warning(DISCLAIMER)
 
 st.divider()
-st.caption('© 2026 IA Tijani, IA Lawal & collaborators. All rights reserved. | Research-use prediction tool. Verify suitability independently before engineering application.')
+st.caption('© 2026 IA Tijani, IA Lawal & collaborators. All rights reserved. | Research-use prediction tool.')
