@@ -90,7 +90,7 @@ def shap_chart(model, poly, scaler, row, refs, n_reference):
     ax2.barh(range(len(order2)), pv[order2], color=['#cc5656' if x >= 0 else '#4689b5' for x in pv[order2]])
     ax2.set_yticks(range(len(order2)), [labels[i] for i in order2])
     ax2.set_xlabel('Allocated SHAP contribution (MPa)')
-    ax2.set_title('Local SHAP explanation (Category not displayed)')
+    ax2.set_title('Local SHAP explanation')
     ax2.axvline(0, color='gray', lw=.8); ax2.grid(alpha=.2, axis='x')
     fig.tight_layout()
     return fig
