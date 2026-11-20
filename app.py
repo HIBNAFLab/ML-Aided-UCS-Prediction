@@ -179,7 +179,8 @@ if 'last_result' in st.session_state:
         st.write(f'Available training reference observations for **{selected_rock}**: **{len(subset):,}**.')
         if len(subset):
             d = local_domain_distance(row, subset)
-            st.caption(f'Nearest reference observation distance (range normalized VP, PLS and SH): {d:.3f}. This is descriptive only, not a validated applicability threshold.')
+            st.caption(f'Nearest reference observation distance (range normalized VP, PLS and SH): {d:.3f}.')
+            # st.caption(f'Nearest reference observation distance (range normalized VP, PLS and SH): {d:.3f}. This is descriptive only, not a validated applicability threshold.')
         if explain and len(subset) >= 2:
             with st.spinner('Computing category-specific SHAP values…'):
                 fig = shap_chart(model, poly, scaler, row, subset, nref)
