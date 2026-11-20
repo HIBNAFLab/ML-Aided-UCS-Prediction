@@ -168,7 +168,7 @@ if submitted:
     output = row.copy(); output['UCS_predicted (MPa)'] = result
     st.download_button('Download prediction (CSV)', output.to_csv(index=False).encode(),
                        file_name='UCS_prediction.csv', mime='text/csv')
-    st.warning(DISCLAIMER)
+    # st.warning(DISCLAIMER)
 
 if 'last_result' in st.session_state:
     result, row, selected_rock, explain, nref = st.session_state['last_result']
