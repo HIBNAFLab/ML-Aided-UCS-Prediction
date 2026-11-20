@@ -161,6 +161,14 @@ if submitted:
         st.session_state['last_result'] = (result, row, rock, explain, nref)
     except Exception as exc:
         st.error(f'Prediction failed: {exc}')
+   
+    st.divider()
+    st.subheader('Prediction output')
+    st.metric('Predicted UCS', f'{result:.2f} MPa')
+    output = row.copy(); output['UCS_predicted (MPa)'] = result
+    st.download_button('Download prediction (CSV)', output.to_csv(index=False).encode(),
+                       file_name='UCS_prediction.csv', mime='text/csv')
+    st.warning(DISCLAIMER)
 
 if 'last_result' in st.session_state:
     result, row, selected_rock, explain, nref = st.session_state['last_result']
@@ -183,13 +191,13 @@ if 'last_result' in st.session_state:
             st.warning('Insufficient reference observations for a SHAP violin plot.')
     except Exception as exc:
         st.warning(f'Reference/SHAP analysis unavailable: {exc}. UCS prediction remains available.')
-    st.divider()
-    st.subheader('Prediction output')
-    st.metric('Predicted UCS', f'{result:.2f} MPa')
-    output = row.copy(); output['UCS_predicted (MPa)'] = result
-    st.download_button('Download prediction (CSV)', output.to_csv(index=False).encode(),
-                       file_name='UCS_prediction.csv', mime='text/csv')
-    st.warning(DISCLAIMER)
+    # st.divider()
+    # st.subheader('Prediction output')
+    # st.metric('Predicted UCS', f'{result:.2f} MPa')
+    # output = row.copy(); output['UCS_predicted (MPa)'] = result
+    # st.download_button('Download prediction (CSV)', output.to_csv(index=False).encode(),
+    #                    file_name='UCS_prediction.csv', mime='text/csv')
+    # st.warning(DISCLAIMER)
 
 st.divider()
 st.caption('Paper under preparation.')
